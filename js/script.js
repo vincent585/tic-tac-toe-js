@@ -57,15 +57,13 @@ function createGame(board, playerArr) {
       let square = parseInt(prompt("pick a square to place your marker in (1-9): "));
       gameBoard.updateSquare(currentPlayer.playerMarker, square - 1);
       gameBoard.checkForWinner();
-      console.log(currentPlayer);
       updateCurrentPlayer();
-      console.log(currentPlayer);
     }
     gameBoard.show();
     alert(`Game over - ${gameBoard.winner}'s win!`);
   }
 
-  return { updateCurrentPlayer, currentPlayer, playGame };
+  return { playGame };
 }
 
 const board = createBoard();
