@@ -31,6 +31,13 @@ const board = (function () {
   return { show, updateSquare }
 })();
 
+function createPlayer(marker) {
+  const _marker = marker;
+  const getMarker = () => _marker;
+
+  return { getMarker };
+}
+
 
 // function createBoard() {
 //   let board = Array(3).fill(" ").map(() => Array(3).fill(" "));
