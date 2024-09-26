@@ -1,5 +1,20 @@
+function createPlayer(marker) {
+  const getMarker = () => marker;
+
+  return { getMarker };
+}
+
 const board = (function () {
   let squares = Array(3).fill(" ").map(() => Array(3).fill(" "));
+
+  const diagonals = () => [
+    [squares[0][0], squares[1][1], squares[2][2]],
+    [squares[0][2], squares[1][1], squares][2][0]]
+  const rows = () => [squares[0], squares[1], squares[2]]
+  const columns = () => [
+    [squares[0][0], squares[1][0], squares[2][0]],
+    [squares[0][1], squares[1][1], squares[2][1]],
+    [squares[0][2], squares[1][2], squares[2][2]]]
 
   const show = () => {
     for (let i = 0; i < squares.length; i++) {
@@ -28,15 +43,9 @@ const board = (function () {
     return squares[row][col] === " ";
   }
 
-  return { show, updateSquare }
+  return { diagonals, rows, columns, show, updateSquare }
 })();
 
-function createPlayer(marker) {
-  const _marker = marker;
-  const getMarker = () => _marker;
-
-  return { getMarker };
-}
 
 
 // function createBoard() {
