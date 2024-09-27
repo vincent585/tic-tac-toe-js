@@ -7,6 +7,8 @@ function createPlayer(marker) {
 const board = (function () {
   let squares = Array(3).fill(" ").map(() => Array(3).fill(" "));
 
+  const getSquares = () => squares;
+
   const diagonals = () => [
     [squares[0][0], squares[1][1], squares[2][2]],
     [squares[0][2], squares[1][1], squares][2][0]]
@@ -43,24 +45,63 @@ const board = (function () {
     return squares[row][col] === " ";
   }
 
-  return { diagonals, rows, columns, show, updateSquare }
+  return { getSquares, diagonals, rows, columns, show, updateSquare }
 })();
 
-const game = (function () {
+const game = (function (board) {
   const players = [createPlayer('X'), createPlayer('O')];
   let currentPlayer = players[0];
   let winner = null;
 
-  const updateCurrentPlayer = () => currentPlayer = currentPlayer.getMarker() === 'X' ? players[1] : players[0]
+  const updateCurrentPlayer = () => currentPlayer = currentPlayer.getMarker() === 'X' ? players[1] : players[0];
 
   const play = () => {
     while (winner === null) {
-
+      board.show();
+      let square = parseInt(prompt("Enter the square you want to place your marker in: "));
+      board.updateSquare(square, currentPlayer.getMarker());
+      if (isGameOver()) { break; }
+      updateCurrentPlayer();
     }
+
+    board.show();
+    alert(`Game over - ${winner} wins!`);
   };
 
-  return { updateCurrentPlayer, play }
-})();
+  const isGameOver = () => {
+    if (hasWinner()) {
+      winner = currentPlayer.getMarker();
+      return true;
+    }
+    else if (isTie()) {
+      winner = "No one";
+      return true;
+    }
+
+    return false;
+  }
+
+  const isTie = () => {
+    return (board.getSquares().flat().every(square => square !== " "));
+  }
+
+  const hasWinner = () => {
+    const winConditions = [...board.rows(), ...board.columns(), ...board.diagonals()];
+
+    for (const condition of winConditions) {
+      if (condition.every(square => square === 'X')) {
+        return true;
+      }
+      else if (condition.every(square => square === 'O')) {
+        return true;
+      }
+    };
+
+    return false;
+  };
+
+  return { play }
+})(board);
 
 
 
