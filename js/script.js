@@ -25,24 +25,30 @@ const board = (function () {
         console.log("---------")
       }
     }
+    console.log("");
   }
 
-  const updateSquare = (square, marker) => {
+  const updateSquare = (marker) => {
+    let square = getUserInput();
     let [row, col] = getRowAndCol(square);
 
     while (!validSquare(row, col)) {
-      alert("That square is already filled! Try again.")
-      let newSquare = parseInt(prompt("Enter a new square: "));
-      [row, col] = getRowAndCol(newSquare);
+      alert("Invalid square - try again.")
+      square = getUserInput();
+      [row, col] = getRowAndCol(square);
     }
 
     squares[row][col] = marker;
   }
 
+  const getUserInput = () => {
+    return parseInt(prompt("Please enter a square (1-9): ")) - 1;
+  }
+
   const getRowAndCol = (square) => { return [Math.floor((square / 3)), square % 3] }
 
   const validSquare = (row, col) => {
-    return squares[row][col] === " ";
+    return squares[row] !== undefined && squares[row][col] === " "
   }
 
   return { getSquares, diagonals, rows, columns, show, updateSquare }
@@ -58,8 +64,7 @@ const game = (function (board) {
   const play = () => {
     while (winner === null) {
       board.show();
-      let square = parseInt(prompt("Enter the square you want to place your marker in: "));
-      board.updateSquare(square, currentPlayer.getMarker());
+      board.updateSquare(currentPlayer.getMarker());
       if (isGameOver()) { break; }
       updateCurrentPlayer();
     }
