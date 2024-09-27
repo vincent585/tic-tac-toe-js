@@ -46,6 +46,22 @@ const board = (function () {
   return { diagonals, rows, columns, show, updateSquare }
 })();
 
+const game = (function () {
+  const players = [createPlayer('X'), createPlayer('O')];
+  let currentPlayer = players[0];
+  let winner = null;
+
+  const updateCurrentPlayer = () => currentPlayer = currentPlayer.getMarker() === 'X' ? players[1] : players[0]
+
+  const play = () => {
+    while (winner === null) {
+
+    }
+  };
+
+  return { updateCurrentPlayer, play }
+})();
+
 
 
 // function createBoard() {
