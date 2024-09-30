@@ -24,26 +24,15 @@ const board = (function () {
     [squares[2], squares[5], squares[8]]
   ];
 
-  const updateSquare = (marker) => {
-    let square = getUserInput();
-
-    while (!validSquare(row, col)) {
-      alert("Invalid square - try again.")
-      square = getUserInput();
-    }
-
+  const updateSquare = (square, marker) => {
     squares[square] = marker;
   }
 
-  const getUserInput = () => {
-    return parseInt(prompt("Please enter a square (1-9): ")) - 1;
+  const validSquare = (square) => {
+    return squares[square] !== undefined && squares[square] === null
   }
 
-  const validSquare = (row) => {
-    return squares[row] !== undefined && squares[row] === null
-  }
-
-  return { getSquares, diagonals, rows, columns, updateSquare }
+  return { getSquares, diagonals, rows, columns, updateSquare, validSquare }
 })();
 
 const game = (function (board) {
@@ -51,16 +40,18 @@ const game = (function (board) {
   let currentPlayer = players[0];
   let winner = null;
 
+  const getCurrentPlayer = () => currentPlayer.getMarker();
   const updateCurrentPlayer = () => currentPlayer = currentPlayer.getMarker() === 'X' ? players[1] : players[0];
 
-  const play = () => {
-    while (winner === null) {
-      board.updateSquare(currentPlayer.getMarker());
-      if (isGameOver()) { break; }
-      updateCurrentPlayer();
+  const playTurn = (square) => {
+    board.updateSquare(square, currentPlayer.getMarker());
+
+    if (isGameOver()) {
+      alert(`Game over - ${winner} wins!`);
+      return;
     }
 
-    alert(`Game over - ${winner} wins!`);
+    updateCurrentPlayer();
   };
 
   const isGameOver = () => {
@@ -95,7 +86,7 @@ const game = (function (board) {
     return false;
   };
 
-  return { play }
+  return { playTurn, getCurrentPlayer }
 })(board);
 
 const displayController = (function (game, board) {
@@ -110,10 +101,27 @@ const displayController = (function (game, board) {
       squareElement.innerText = square;
       squareElement.setAttribute('data-index', index);
       squareElement.classList.add('square');
+      squareElement.addEventListener('click', (event) => updateGameboard(event));
 
       gameboard.appendChild(squareElement);
     }
+
+    const updateGameboard = (event) => {
+      const square = parseInt(event.target.dataset.index);
+      const player = game.getCurrentPlayer();
+
+      if (!board.validSquare(square)) {
+        alert("Invalid square - try again");
+        return;
+      }
+
+      let squareToUpdate = gameboard.querySelector(`button[data-index="${square}"]`);
+      squareToUpdate.innerText = player;
+      game.playTurn(square);
+    }
   };
+
+
 
   return { renderBoard };
 })(game, board);
