@@ -18,16 +18,6 @@ const board = (function () {
     [squares[0][1], squares[1][1], squares[2][1]],
     [squares[0][2], squares[1][2], squares[2][2]]]
 
-  const show = () => {
-    for (let i = 0; i < squares.length; i++) {
-      console.log(squares[i].join(" | "));
-      if (i < squares.length - 1) {
-        console.log("---------")
-      }
-    }
-    console.log("");
-  }
-
   const updateSquare = (marker) => {
     let square = getUserInput();
     let [row, col] = getRowAndCol(square);
@@ -51,7 +41,7 @@ const board = (function () {
     return squares[row] !== undefined && squares[row][col] === " "
   }
 
-  return { getSquares, diagonals, rows, columns, show, updateSquare }
+  return { getSquares, diagonals, rows, columns, updateSquare }
 })();
 
 const game = (function (board) {
@@ -63,13 +53,11 @@ const game = (function (board) {
 
   const play = () => {
     while (winner === null) {
-      board.show();
       board.updateSquare(currentPlayer.getMarker());
       if (isGameOver()) { break; }
       updateCurrentPlayer();
     }
 
-    board.show();
     alert(`Game over - ${winner} wins!`);
   };
 
@@ -107,3 +95,21 @@ const game = (function (board) {
 
   return { play }
 })(board);
+
+const displayController = (function (game, board) {
+  const gameboard = document.querySelector('.gameboard');
+
+  const renderBoard = () => {
+    let squares = board.getSquares().flat();
+    for (const square of squares) {
+      let squareElement = document.createElement('button');
+      squareElement.innerText = square;
+      squareElement.setAttribute('data-index', squares.indexOf(square));
+      squareElement.classList.add('square');
+
+      gameboard.appendChild(squareElement);
+    }
+  };
+
+  return { renderBoard };
+})(game, board);
