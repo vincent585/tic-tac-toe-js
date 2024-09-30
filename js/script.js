@@ -5,40 +5,42 @@ function createPlayer(marker) {
 }
 
 const board = (function () {
-  let squares = Array(3).fill(" ").map(() => Array(3).fill(" "));
+  let squares = Array(9).fill(null);
 
   const getSquares = () => squares;
 
   const diagonals = () => [
-    [squares[0][0], squares[1][1], squares[2][2]],
-    [squares[0][2], squares[1][1], squares][2][0]]
-  const rows = () => [squares[0], squares[1], squares[2]]
+    [squares[0], squares[4], squares[8]],
+    [squares[2], squares[4], squares[6]]
+  ];
+  const rows = () => [
+    [squares[0], squares[1], squares[2]],
+    [squares[3], squares[4], squares[5]],
+    [squares[6], squares[7], squares[8]]
+  ];
   const columns = () => [
-    [squares[0][0], squares[1][0], squares[2][0]],
-    [squares[0][1], squares[1][1], squares[2][1]],
-    [squares[0][2], squares[1][2], squares[2][2]]]
+    [squares[0], squares[3], squares[6]],
+    [squares[1], squares[4], squares[7]],
+    [squares[2], squares[5], squares[8]]
+  ];
 
   const updateSquare = (marker) => {
     let square = getUserInput();
-    let [row, col] = getRowAndCol(square);
 
     while (!validSquare(row, col)) {
       alert("Invalid square - try again.")
       square = getUserInput();
-      [row, col] = getRowAndCol(square);
     }
 
-    squares[row][col] = marker;
+    squares[square] = marker;
   }
 
   const getUserInput = () => {
     return parseInt(prompt("Please enter a square (1-9): ")) - 1;
   }
 
-  const getRowAndCol = (square) => { return [Math.floor((square / 3)), square % 3] }
-
-  const validSquare = (row, col) => {
-    return squares[row] !== undefined && squares[row][col] === " "
+  const validSquare = (row) => {
+    return squares[row] !== undefined && squares[row] === null
   }
 
   return { getSquares, diagonals, rows, columns, updateSquare }
@@ -75,7 +77,7 @@ const game = (function (board) {
   }
 
   const isTie = () => {
-    return (board.getSquares().flat().every(square => square !== " "));
+    return (board.getSquares().every(square => square !== null));
   }
 
   const hasWinner = () => {
@@ -100,7 +102,7 @@ const displayController = (function (game, board) {
   const gameboard = document.querySelector('.gameboard');
 
   const renderBoard = () => {
-    let squares = board.getSquares().flat();
+    let squares = board.getSquares();
     for (const square of squares) {
       let squareElement = document.createElement('button');
       squareElement.innerText = square;
@@ -113,3 +115,5 @@ const displayController = (function (game, board) {
 
   return { renderBoard };
 })(game, board);
+
+displayController.renderBoard();
