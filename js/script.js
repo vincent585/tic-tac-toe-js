@@ -102,11 +102,13 @@ const displayController = (function (game, board) {
   const gameboard = document.querySelector('.gameboard');
 
   const renderBoard = () => {
-    let squares = board.getSquares();
-    for (const square of squares) {
+    const squares = board.getSquares();
+
+    for (let index = 0; index < squares.length; index++) {
+      const square = squares[index];
       let squareElement = document.createElement('button');
       squareElement.innerText = square;
-      squareElement.setAttribute('data-index', squares.indexOf(square));
+      squareElement.setAttribute('data-index', index);
       squareElement.classList.add('square');
 
       gameboard.appendChild(squareElement);
