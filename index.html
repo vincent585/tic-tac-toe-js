@@ -10,8 +10,41 @@
 </head>
 
 <body>
+  <dialog>
+    <form>
+      <div class="input-wrapper">
+        <label for="player-one-name">Player 1 Name: </label>
+        <input type="text" name="player-one-name" id="player-one-name">
+      </div>
+      <div class="input-wrapper">
+        <legend>
+          Player 1 Marker:
+          <label for="player-one-marker">X </label>
+          <input type="radio" name="player-one-marker" value="X" checked>
+          <label for="player-one-marker">O </label>
+          <input type="radio" name="player-one-marker" value="O">
+        </legend>
+      </div>
+      <div class="input-wrapper">
+        <label for="player-two-name">Player 2 Name: </label>
+        <input type="text" name="player-two-name" id="player-two-name">
+      </div>
+      <div class="input-wrapper">
+        <legend>
+          Player 2 Marker:
+          <label for="player-two-marker">X </label>
+          <input type="radio" name="player-two-marker" value="X">
+          <label for="player-two-marker">O </label>
+          <input type="radio" name="player-two-marker" value="O" checked>
+        </legend>
+      </div>
+      <button type="submit" id="start">Start Game</button>
+      <button value="cancel" formmethod="dialog" id="reset-form">Cancel</button>
+    </form>
+  </dialog>
   <div class="gameboard">
   </div>
+
 
 </body>
 

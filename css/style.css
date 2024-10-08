@@ -7,12 +7,25 @@
 body {
     height: 100vh;
     display: flex;
+    flex-direction: column;
+    gap: 30px;
     justify-content: center;
     align-items: center;
 }
 
+dialog {
+    width: max-content;
+    height: fit-content;
+    position: fixed;
+    top: 20%;
+    justify-self: center;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 2px 2px 2px gray;
+}
+
 .gameboard {
-    height: 80%;
+    height: 70%;
     width: 80vh;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
