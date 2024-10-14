@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: 'VenrynSansRegular', monospace;
 }
 
 body {
@@ -22,6 +23,60 @@ dialog {
     border: none;
     border-radius: 12px;
     box-shadow: 2px 2px 2px gray;
+}
+
+form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 15px;
+}
+
+.input-wrapper>input[type=text] {
+    min-height: 25px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgb(219, 219, 219);
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.input-wrapper>input[type=text]:focus {
+    outline: 2px solid rgb(130, 130, 255);
+}
+
+.input-wrapper {
+    margin-bottom: 10px;
+}
+
+form>button {
+    width: 50%;
+    justify-self: center;
+    min-height: 50px;
+}
+
+#start {
+    background-color: rgb(130, 130, 255);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 16px;
+}
+
+#start:hover {
+    background-color: rgb(105, 105, 216);
+}
+
+#reset-form {
+    background-color: white;
+    border: 2px solid rgb(130, 130, 255);
+    border-radius: 16px;
+    font-size: 16px;
+    color: rgb(130, 130, 255);
+}
+
+#reset-form:hover {
+    background-color: rgb(224, 224, 224);
 }
 
 .gameboard {
