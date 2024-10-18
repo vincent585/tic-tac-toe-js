@@ -40,6 +40,9 @@ const game = (function (board) {
   let players = [];
   let currentPlayer = null;
   let winner = null;
+  let gameMessage = null;
+
+  const getGameMessage = () => gameMessage;
 
   const getCurrentPlayer = () => currentPlayer;
   const updateCurrentPlayer = (player = null) => {
@@ -49,6 +52,8 @@ const game = (function (board) {
     else {
       currentPlayer = players.find(p => p !== currentPlayer);
     }
+
+    gameMessage = `${currentPlayer.getName()}'s (${currentPlayer.getMarker()}) turn!`;
   }
 
   const setPlayers = (playerArray) => players = playerArray;
@@ -57,8 +62,7 @@ const game = (function (board) {
     board.updateSquare(square, currentPlayer);
 
     if (isGameOver()) {
-      // TODO - Change to display in DOM
-      alert(`Game over - ${winner} wins!`);
+      gameMessage = `Game over - ${winner} wins!`
       return;
     }
 
@@ -86,10 +90,7 @@ const game = (function (board) {
     const winConditions = [...board.rows(), ...board.columns(), ...board.diagonals()];
 
     for (const condition of winConditions) {
-      if (condition.every(square => square === 'X')) {
-        return true;
-      }
-      else if (condition.every(square => square === 'O')) {
+      if (condition.every(square => square === game.getCurrentPlayer())) {
         return true;
       }
     };
@@ -97,7 +98,7 @@ const game = (function (board) {
     return false;
   };
 
-  return { playTurn, getCurrentPlayer, setPlayers, updateCurrentPlayer }
+  return { playTurn, getCurrentPlayer, setPlayers, updateCurrentPlayer, getGameMessage }
 })(board);
 
 const displayController = (function (game, board) {
@@ -108,6 +109,7 @@ const displayController = (function (game, board) {
   const resetFormBtn = document.querySelector('#reset-form');
   const playerOneMarker = document.getElementsByName('player-one-marker');
   const playerTwoMarker = document.getElementsByName('player-two-marker');
+  const messages = document.querySelector('.messages');
 
   startBtn.addEventListener('click', (event) => {
     event.preventDefault();
@@ -124,9 +126,11 @@ const displayController = (function (game, board) {
 
     game.setPlayers(players);
     game.updateCurrentPlayer(players.find(p => p.getMarker() === 'X'));
+
     form.reset();
     setupModal.close();
     renderBoard();
+    updateMessage(game.getGameMessage());
   });
 
   resetFormBtn.addEventListener('click', () => {
@@ -171,6 +175,10 @@ const displayController = (function (game, board) {
     return true;
   }
 
+  const updateMessage = (message) => {
+    messages.innerText = message;
+  };
+
   const renderBoard = () => {
     const squares = board.getSquares();
 
@@ -190,21 +198,20 @@ const displayController = (function (game, board) {
       const player = game.getCurrentPlayer();
 
       if (!board.validSquare(square)) {
-        alert("Invalid square - try again");
+        updateMessage("Invalid square - try again!");
         return;
       }
 
       let squareToUpdate = gameboard.querySelector(`button[data-index="${square}"]`);
       squareToUpdate.innerText = player.getMarker();
       game.playTurn(square);
+      updateMessage(game.getGameMessage());
     }
   };
 
   const playerSetup = () => {
     setupModal.showModal();
   }
-
-
 
   return { renderBoard, playerSetup };
 })(game, board);

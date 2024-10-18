@@ -87,4 +87,10 @@ form>button {
     grid-template-rows: repeat(3, 1fr);
 }
 
-.square {}
+.square {
+    font-size: 64px;
+}
+
+.messages {
+    font-size: 32px;
+}
