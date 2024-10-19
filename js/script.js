@@ -9,6 +9,7 @@ const board = (function () {
   let squares = Array(9).fill(null);
 
   const getSquares = () => squares;
+  const reset = () => squares = Array(9).fill(null);
 
   const diagonals = () => [
     [squares[0], squares[4], squares[8]],
@@ -33,7 +34,7 @@ const board = (function () {
     return squares[square] !== undefined && squares[square] === null
   }
 
-  return { getSquares, diagonals, rows, columns, updateSquare, validSquare }
+  return { getSquares, diagonals, rows, columns, updateSquare, validSquare, reset }
 })();
 
 const game = (function (board) {
@@ -70,8 +71,9 @@ const game = (function (board) {
   };
 
   const isGameOver = () => {
-    if (hasWinner()) {
+    if (isWon()) {
       winner = currentPlayer.getName();
+      board.reset();
       return true;
     }
     else if (isTie()) {
@@ -86,7 +88,7 @@ const game = (function (board) {
     return (board.getSquares().every(square => square !== null));
   }
 
-  const hasWinner = () => {
+  const isWon = () => {
     const winConditions = [...board.rows(), ...board.columns(), ...board.diagonals()];
 
     for (const condition of winConditions) {
@@ -98,7 +100,15 @@ const game = (function (board) {
     return false;
   };
 
-  return { playTurn, getCurrentPlayer, setPlayers, updateCurrentPlayer, getGameMessage }
+  const hasWinner = () => winner !== null;
+  const reset = () => {
+    winner = null;
+    players = [];
+    gameMessage = null;
+    currentPlayer = null;
+  };
+
+  return { playTurn, getCurrentPlayer, setPlayers, updateCurrentPlayer, getGameMessage, hasWinner, reset }
 })(board);
 
 const displayController = (function (game, board) {
@@ -206,14 +216,44 @@ const displayController = (function (game, board) {
       squareToUpdate.innerText = player.getMarker();
       game.playTurn(square);
       updateMessage(game.getGameMessage());
+
+      if (game.hasWinner()) {
+        replay();
+      }
+    }
+
+    const replay = () => {
+      disableSquares();
+
+      const replayBtn = document.createElement('button');
+      replayBtn.innerText = 'Play Again';
+      replayBtn.addEventListener('click', () => {
+        resetBoard();
+        game.reset();
+        playerSetup();
+      });
+
+      messages.appendChild(replayBtn);
+    };
+
+    const disableSquares = () => {
+      const squareElements = document.querySelectorAll('.square');
+
+      squareElements.forEach(square => {
+        square.disabled = true;
+      });
     }
   };
 
   const playerSetup = () => {
     setupModal.showModal();
-  }
+  };
 
-  return { renderBoard, playerSetup };
+  const resetBoard = () => {
+    gameboard.replaceChildren();
+  };
+
+  return { playerSetup };
 })(game, board);
 
 displayController.playerSetup();
