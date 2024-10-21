@@ -93,4 +93,21 @@ form>button {
 
 .messages {
     font-size: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+.messages>button {
+    background-color: rgb(130, 130, 255);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 16px;
+    height: 50px;
+    width: 50%;
+    align-self: center;
+}
+
+.messages>button:hover {
+    background-color: rgb(105, 105, 216);
 }
